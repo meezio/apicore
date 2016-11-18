@@ -1,0 +1,6 @@
+server_name: BNPP API server
+color:
+    - blue
+    - red
+    - green
+debug: true
