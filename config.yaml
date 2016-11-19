@@ -1,6 +1,9 @@
 server_name: BNPP API server
-color:
-    - blue
-    - red
-    - green
 debug: true
+# Set issuers to 'null' to accept all JWT from all issuers
+issWhitelist:
+    - https://accounts.google.com
+    - https://authbnpp.meez.io
+# If whitelist is empty, use blacklist to exclue issuers
+issBlacklist:
+tokenExpire: false

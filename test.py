@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from apicore import API, Logger, config, Http409Exception
+from apicore import API, Logger, config, Http409Exception, Authorization
 
 config.load('config.yaml')
 api = API(__name__)
@@ -16,6 +16,13 @@ def hello():
 @api.route('/error/')
 def error():
     raise Http409Exception()
+
+
+@api.route('/jwt/')
+def jwt():
+    userProfile = Authorization()
+    # print(userProfile);
+    return "JWT Valid!"
 
 
 if __name__ == "__main__":

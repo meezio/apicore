@@ -22,9 +22,10 @@
 # SOFTWARE.
 ################################################################################
 
-from flask import Flask
 from werkzeug.exceptions import default_exceptions
 from werkzeug.exceptions import HTTPException
+from flask import Flask
+from flask import request
 from flask import jsonify
 from .config import config
 
@@ -74,4 +75,6 @@ class API(Flask):
     def __setHeaders(self, response):
         response.headers.add('Server', config.server_name)
         response.headers.add('Access-Control-Allow-Origin', '*')
+        if request.method == 'OPTIONS':
+            response.headers["Access-Control-Allow-Headers"] = "Authorization"
         return response
