@@ -48,7 +48,7 @@ class API(Flask):
         def decorator(f):
             f.__name__ = self.prefix + "_" + f.__name__
             endpoint = options.pop('endpoint', None)
-            self.add_url_rule('/' + self.prefix + rule, endpoint, f, **options)
+            self.add_url_rule(self.prefix + rule, endpoint, f, **options)
             return f
         return decorator
 

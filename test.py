@@ -5,7 +5,7 @@ from apicore import API, Logger, config, Http409Exception, Authorization
 config.load('config.yaml')
 api = API(__name__)
 Logger.info("Démarrage de {}".format(config.server_name))
-api.prefix = "api"
+api.prefix = "/api"
 
 
 @api.route('/')
