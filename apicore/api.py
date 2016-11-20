@@ -78,3 +78,5 @@ class API(Flask):
         if request.method == 'OPTIONS':
             response.headers["Access-Control-Allow-Headers"] = "Authorization"
         return response
+
+api = API(__name__)
