@@ -25,6 +25,8 @@
 from werkzeug import exceptions
 from .logger import Logger
 
+__all__ = ['Http400Exception', 'Http401Exception', 'Http403Exception', 'Http404Exception', 'Http409Exception', 'Http500Exception']
+
 """
 Exceptions are provided to send regular HTTP error code and messages.
 
