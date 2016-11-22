@@ -28,6 +28,7 @@ setup(
         'termcolor',
         'Flask',
         'PyYAML',
-        'python-jose'
+        'python-jose',
+        'redis'
     ]
 )

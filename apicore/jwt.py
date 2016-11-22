@@ -29,6 +29,7 @@ from jose.exceptions import ExpiredSignatureError, JWTError
 from urllib.request import urlopen
 from .exceptions import Http401Exception, Http403Exception
 from .config import config
+from .cache import cache
 
 
 def Authorization():
@@ -59,9 +60,12 @@ def Authorization():
             raise Http403Exception("Issuer '{}' is blacklisted.".format(issuer))
 
     # Get the issuer's keys
-    # TODO Use a cache (redis) => parcourir toute les clée et voir exp le plus petit pour fixer timeout du cache
-    oidcConf = getJSON("{}/.well-known/openid-configuration".format(issuer))
-    keys = getJSON(oidcConf.get("jwks_uri")).get("keys")
+    keys = cache.get(issuer)
+    if not keys:
+        oidcConf = getJSON("{}/.well-known/openid-configuration".format(issuer))
+        keys = getJSON(oidcConf.get("jwks_uri")).get("keys")
+        # TODO parcourir toute les clée et voir exp le plus petit pour fixer timeout du cache
+        cache.set(issuer, keys)
 
     try:
         userProfile = jwt.decode(auth[1], keys, options={"verify_aud": False, "verify_iss": False, "verify_sub": False, "verify_exp": config.tokenExpire})
