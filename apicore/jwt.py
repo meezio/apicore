@@ -23,10 +23,13 @@
 ################################################################################
 
 import json
+import datetime
+import time
 from flask import request
 from jose import jwt
 from jose.exceptions import ExpiredSignatureError, JWTError
 from urllib.request import urlopen
+from .logger import Logger
 from .exceptions import Http401Exception, Http403Exception
 from .config import config
 from .cache import cache
@@ -45,6 +48,7 @@ def Authorization():
     # Find the token issuer
     try:
         tmp = jwt.get_unverified_claims(auth[1])
+        kid = jwt.get_unverified_header(auth[1]).get('kid')
         issuer = tmp.get('iss')
     except JWTError as ex:
         raise Http403Exception(str(ex))
@@ -60,15 +64,26 @@ def Authorization():
             raise Http403Exception("Issuer '{}' is blacklisted.".format(issuer))
 
     # Get the issuer's keys
-    keys = cache.get(issuer)
-    if not keys:
+    key = cache.get("{}@{}".format(issuer, kid))
+    if not key:
+        Logger.info("Caching keys for issuer '{}'".format(issuer))
         oidcConf = getJSON("{}/.well-known/openid-configuration".format(issuer))
         keys = getJSON(oidcConf.get("jwks_uri")).get("keys")
-        # TODO parcourir toute les clée et voir exp le plus petit pour fixer timeout du cache
-        cache.set(issuer, keys)
+        # Cache expires in 365 or less day depending on 'exp' attribute in JWS
+        ts = time.mktime(datetime.datetime.utcnow().timetuple()) + (365 * 24 * 60 * 60)  # timespamp now + 365days
+        for k in keys:
+            expire = k.get('exp', ts)
+            kkid = k.get('kid')
+
+            # convert timespam from ms to s
+            if expire > 4000000000:
+                expire = expire // 1000
+
+            cache.set("{}@{}".format(issuer, kkid), k, expire)
+            key = cache.get("{}@{}".format(issuer, kid))
 
     try:
-        userProfile = jwt.decode(auth[1], keys, options={"verify_aud": False, "verify_iss": False, "verify_sub": False, "verify_exp": config.tokenExpire})
+        userProfile = jwt.decode(auth[1], key, options={"verify_aud": False, "verify_iss": False, "verify_sub": False, "verify_exp": config.tokenExpire})
         return userProfile
     except ExpiredSignatureError as ex:
         raise Http403Exception(str(ex), True)

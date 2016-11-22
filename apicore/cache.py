@@ -32,7 +32,7 @@ class Cache:
     def __init__(self):
         self.module = None
 
-    def set(self, key, value, expire=True):
+    def set(self, key, value, expire=None):
         self._getModule().set(key, value, expire)
 
     def get(self, key):
@@ -53,8 +53,11 @@ class _redis:
         Logger.info("Create Redis connection pools for cache : '{}'".format(config.redis))
         self.conn = redis.StrictRedis.from_url(config.redis)
 
+    # expire: timespam in seconde
     def set(self, key, value, expire):
         self.conn.set(key, pickle.dumps(value))
+        if expire:
+            self.conn.expireat(key, expire)
 
     def get(self, key):
         data = self.conn.get(key)
