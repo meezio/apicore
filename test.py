@@ -3,6 +3,7 @@
 from apicore import api, Logger, config, Http409Exception, Authorization
 
 config.load('config.yaml')
+print(config.__dict__)
 Logger.info("Démarrage de {}".format(config.server_name))
 api.prefix = "/api"
 

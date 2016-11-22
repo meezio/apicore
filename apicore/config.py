@@ -23,28 +23,46 @@
 ################################################################################
 
 import yaml
+from .logger import Logger
 from .exceptions import Http500Exception
 
 
 class Config:
     def __init__(self):
-        self.data = {"debug": True}
+        self.data = dict()
+        self.__setDefault()
 
-    def load(self, confFile):
+    def load(self, confFile='config.yaml'):
         """ Load config file from filesystem.
 
         :param str string: Path to config file.
         """
-        data = yaml.load(open(confFile))
-        if data:
-            if "debug" not in data:
-                data["debug"] = True
-            self.data = data
+        try:
+            with open(confFile) as f:
+                data = yaml.load(f)
+                if data:
+                    self.data.update(data)
+        except FileNotFoundError:
+                Logger.error("Configuration file not found")
 
     def __getattr__(self, name):
         if name in self.data:
             return self.data[name]
         else:
             raise Http500Exception("Config value '{}' does not exist.".format(name))
+
+    def __setDefault(self):
+        # Service name
+        self.data['server_name'] = "API server"
+        # Active debug
+        self.data['debug'] = True
+        # Accept all JWT from issuers from this list
+        self.data['issWhitelist'] = None
+        # Reject all JWT from issuers from this list
+        self.data['issBlacklist'] = None
+        # Validate token against Expire date/time
+        self.data['tokenExpire'] = True
+        # redis://:password@localhost:6379/10
+        self.data['redis'] = None
 
 config = Config()
