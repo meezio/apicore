@@ -3,8 +3,7 @@
 from apicore import api, Logger, config, Http409Exception, Authorization
 
 config.load('config.yaml')
-print(config.__dict__)
-Logger.info("Démarrage de {}".format(config.server_name))
+Logger.info("{} started".format(config.server_name))
 api.prefix = "/api"
 
 
@@ -21,7 +20,7 @@ def error():
 @api.route('/jwt/')
 def jwt():
     userProfile = Authorization()
-    # print(userProfile);
+    print(userProfile);
     return "JWT Valid!"
 
 
