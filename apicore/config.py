@@ -28,6 +28,18 @@ from .exceptions import Http500Exception
 
 
 class Config:
+    """ Manage configuration values.
+    To use by importing the instance :
+
+    exemple:
+        .. code::
+
+            from apicore import config
+
+            print(config.server_name)
+
+
+    """
     def __init__(self):
         self.data = dict()
         self.__setDefault()

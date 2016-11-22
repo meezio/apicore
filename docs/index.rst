@@ -19,8 +19,8 @@ Features
 * Raise exception conform to HTTP status codes
 * Authorization using JSON Web Token(JWT) issued from an OpenID Connect provider.
 
-Sample
-------
+Example
+-------
 
 .. code:: python
 
@@ -58,7 +58,7 @@ Sample
 Configuration
 -------------
 
-Configuration is set in a YAML file @see apicore.config
+Configuration is set in a YAML file (see :py:class:`apicore.config.Config`).
 
 +--------------+---------------+------------------------------------------------------------------------------------------------+
 | Name         | Default value | Description                                                                                    |
@@ -69,9 +69,9 @@ Configuration is set in a YAML file @see apicore.config
 +--------------+---------------+------------------------------------------------------------------------------------------------+
 | issWhitelist | None          | Whitelist for OIDC issuers. If not set, every issuers are allowed except ones from blacklist.  |
 +--------------+---------------+------------------------------------------------------------------------------------------------+
-| issBlacklist | None          | Blacklist for OIDC issuers. synaxte : same as 'iss' claim in the JWT.                                |
+| issBlacklist | None          | Blacklist for OIDC issuers. synaxte : same as 'iss' claim in the JWT.                          |
 +--------------+---------------+------------------------------------------------------------------------------------------------+
-| tokenExpire  | True          | Check 'exp' claim in JWT to validate token.                                                          |
+| tokenExpire  | True          | Check 'exp' claim in JWT to validate token.                                                    |
 +--------------+---------------+------------------------------------------------------------------------------------------------+
 | redis        | None          | Redis server used for caching data : redis://:password@localhost:6379/0. If not set use memory.|
 +--------------+---------------+------------------------------------------------------------------------------------------------+
@@ -89,8 +89,8 @@ APIs
    api/exceptions
    api/logger
 
-TODO
-----
 
-* i18n HTTP messages : default in english, build app can translate to other language => document messge variable here.
-* Command line argument & env variable to overide config file
+.. todo::
+
+    * i18n HTTP response messages.
+    * Configure using command line argument and environnement variables which override configuration file.

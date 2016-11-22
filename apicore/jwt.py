@@ -36,6 +36,21 @@ from .cache import cache
 
 
 def Authorization():
+    """ Check that JSON Web Tokens (JWT) pass to Request ``Authorization`` header is valide.
+    The JWT MUST be provided by an OpenID Connect provider and be passed as a Bearer token :
+
+    .. code:: bash
+
+        Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
+
+
+    To validate signature, the publics keys are retrieved by fetching the issuer URL at ``/.well-known/openid-configuration`` and are store in cache for further use.
+
+    :return: The claims contained in the JWT body.
+    :rtype: dict
+    :raises apicore.Http401Exception: If they is no Authorization header.
+    :raises apicore.Http403Exception: If Authorization header is not valid.
+    """
     # Authorization required
     if "Authorization" not in request.headers:
         raise Http401Exception("No Authorization header present")

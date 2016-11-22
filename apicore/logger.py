@@ -37,7 +37,7 @@ class Logger:
 
     @staticmethod
     def info(string):
-        """ Print information message to console.
+        """ Print information message to stdout.
 
         :param str string: message to print.
         """

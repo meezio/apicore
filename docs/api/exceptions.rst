@@ -1,20 +1,20 @@
 Exceptions
 ^^^^^^^^^^
 
-.. automodule:: apicore.Http400Exception
+.. autoclass:: apicore.Http400Exception
    :members:
 
-.. automodule:: apicore.Http401Exception
+.. autoclass:: apicore.Http401Exception
    :members:
 
-.. automodule:: apicore.Http403Exception
+.. autoclass:: apicore.Http403Exception
    :members:
 
-.. automodule:: apicore.Http404Exception
+.. autoclass:: apicore.Http404Exception
    :members:
 
-.. automodule:: apicore.Http409Exception
+.. autoclass:: apicore.Http409Exception
    :members:
 
-.. automodule:: apicore.Http500Exception
+.. autoclass:: apicore.Http500Exception
    :members:

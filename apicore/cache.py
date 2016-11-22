@@ -29,13 +29,42 @@ from .config import config
 
 
 class Cache:
+    """ Cache for the application.
+    To use by importing the instance :
+
+    exemple:
+        .. code::
+
+            from apicore import cache
+
+            key = "my_data"
+            date = {"color": "orange", "flag": True}
+            cache.set(key, data)
+            print(cache.get(key))
+
+
+    .. note::
+
+        If ``redis`` URI is configured the cache is store in redis server, otherwise it is cache in memory.
+
+    """
     def __init__(self):
         self.module = None
 
     def set(self, key, value, expire=None):
+        """
+
+        :param str key: the key referencing the data
+        :param value: the date to store in cache
+        :param integer expire: Expire at a given timestamp in seconde.
+        """
         self._getModule().set(key, value, expire)
 
     def get(self, key):
+        """
+
+        :param str key: the key referencing the data
+        """
         return self._getModule().get(key)
 
     def _getModule(self):

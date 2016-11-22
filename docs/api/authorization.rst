@@ -1,5 +1,4 @@
 Authorization
 ^^^^^^^^^^^^^
 
-.. automodule:: apicore.Authorization
-   :members:
+.. autofunction:: apicore.Authorization

@@ -1,5 +1,5 @@
 Logger
 ^^^^^^
 
-.. automodule:: apicore.Logger
+.. autoclass:: apicore.Logger
    :members:
