@@ -74,10 +74,10 @@ class _memory:
         self.data = dict()
 
     def set(self, key, value, expire):
-        pass
+        self.data[key] = value
 
     def get(self, key):
-        pass
+        return self.data.get(key)
 
 
 cache = Cache()

@@ -7,4 +7,4 @@ issWhitelist:
 # If whitelist is empty, use blacklist to exclue issuers
 issBlacklist:
 tokenExpire: false
-redis: redis://:Rtgg7$YU1MDex@localhost:6379/10
+redis: # redis://:Rtgg7$YU1MDex@localhost:6379/10
