@@ -74,8 +74,8 @@ class API(Flask):
     # Function to be run after each request to set headers
     def __setHeaders(self, response):
         response.headers.add('Server', config.server_name)
+        response.headers.add('Access-Control-Allow-Origin', '*')
         if request.method == 'OPTIONS':
-            response.headers.add('Access-Control-Allow-Origin', '*')
             response.headers.add('Access-Control-Allow-Methods', 'DELETE, GET, HEAD, PATCH, POST, PUT')
             response.headers.add('Access-Control-Allow-Headers', 'Authorization, Content-Type')
 
