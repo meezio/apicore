@@ -7,7 +7,7 @@ Logger.info("{} started".format(config.server_name))
 api.prefix = "/api"
 
 
-@api.route('/')
+@api.route('/', methods=['GET', 'PUT', 'POST', 'DELETE', 'PATCH'])
 def hello():
     return "API v0.1"
 
