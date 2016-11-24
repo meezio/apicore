@@ -55,7 +55,7 @@ class Cache:
         """
 
         :param str key: the key referencing the data
-        :param value: the date to store in cache
+        :param value: the data to store in cache
         :param integer expire: Expire at a given timestamp in seconde.
         """
         self._getModule().set(key, value, expire)

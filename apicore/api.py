@@ -75,6 +75,7 @@ class API(Flask):
     def __setHeaders(self, response):
         response.headers.add('Server', config.server_name)
         response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Methods', 'DELETE,GET,HEAD,PATCH,POST,PUT')
         if request.method == 'OPTIONS':
             response.headers["Access-Control-Allow-Headers"] = "Authorization"
         return response

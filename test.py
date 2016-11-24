@@ -20,7 +20,7 @@ def error():
 @api.route('/jwt/')
 def jwt():
     userProfile = Authorization()
-    print(userProfile);
+    print(userProfile)
     return "JWT Valid!"
 
 
