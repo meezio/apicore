@@ -7,6 +7,7 @@ The code is open source, release under MIT and written in Python 3.
 
 .. code:: bash
 
+    apt-get install build-essential python3-dev
     pip install git+https://github.com/meezio/apicore.git
 
 Features
