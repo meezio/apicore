@@ -51,19 +51,24 @@ def Authorization():
     :raises apicore.Http401Exception: If they is no Authorization header.
     :raises apicore.Http403Exception: If Authorization header is not valid.
     """
-    # Authorization required
-    if "Authorization" not in request.headers:
-        raise Http401Exception("No Authorization header present")
 
-    # Get JWT from HTTP headers
-    auth = request.headers.get("Authorization").split()
-    if len(auth) is not 2 and auth[0] is not "Bearer":
-        raise Http403Exception("Malformed Authorization HTTP Header : format MUST match Bearer TOKEN.")
+    token = request.args.get('token')
+    if not token:
+        # Authorization required
+        if "Authorization" not in request.headers:
+            raise Http401Exception("Neither Authorization header nor 'token' query parameter are present")
+
+        # Get JWT from HTTP headers
+        auth = request.headers.get("Authorization").split()
+        if len(auth) is not 2 and auth[0] is not "Bearer":
+            raise Http403Exception("Malformed Authorization HTTP Header : format MUST match Bearer TOKEN.")
+
+        token = auth[1]
 
     # Find the token issuer
     try:
-        tmp = jwt.get_unverified_claims(auth[1])
-        kid = jwt.get_unverified_header(auth[1]).get('kid')
+        tmp = jwt.get_unverified_claims(token)
+        kid = jwt.get_unverified_header(token).get('kid')
         issuer = tmp.get('iss')
     except JWTError as ex:
         raise Http403Exception(str(ex))
@@ -98,7 +103,7 @@ def Authorization():
             key = cache.get("{}@{}".format(issuer, kid))
 
     try:
-        userProfile = jwt.decode(auth[1], key, options={"verify_aud": False, "verify_iss": False, "verify_sub": False, "verify_exp": config.tokenExpire})
+        userProfile = jwt.decode(token, key, options={"verify_aud": False, "verify_iss": False, "verify_sub": False, "verify_exp": config.tokenExpire})
         return userProfile
     except ExpiredSignatureError as ex:
         raise Http403Exception(str(ex), True)
