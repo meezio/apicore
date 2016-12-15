@@ -36,7 +36,7 @@ from .cache import cache
 
 
 def Authorization():
-    """ Check that JSON Web Tokens (JWT) pass to Request ``Authorization`` header is valide.
+    """ Check that JSON Web Token (JWT) passed through ``Authorization`` header or through  query parameter 'token' is valid.
     The JWT MUST be provided by an OpenID Connect provider and be passed as a Bearer token :
 
     .. code:: bash

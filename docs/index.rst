@@ -88,6 +88,7 @@ APIs
    api/cache
    api/config
    api/exceptions
+   api/lang
    api/logger
 
 
