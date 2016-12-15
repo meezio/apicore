@@ -24,16 +24,16 @@ Features
 Links
 -----
 
-* `documentation <http://apicore.readthedocs.io/en/latest/>`_
-* `sources <https://github.com/meezio/apicore>`_
-* `compagny <https://meez.io>`_
+* `Documentation <http://apicore.readthedocs.io/en/latest/>`_
+* `Source code <https://github.com/meezio/apicore>`_
+* `Compagny <https://meez.io>`_
 """
 
 from setuptools import setup
 
 setup(
     name='apicore',
-    version='1.0.0',
+    version='1.0.1',
     packages=['apicore'],
     author="Meezio SAS",
     author_email="dev@meez.io",

@@ -34,9 +34,9 @@ class Lang:
         :return str: The best matching language or None if no matching.
         """
         for lang in request.accept_languages.values():
-            if lang in supported_languages:
+            if lang in available_languages:
                 return lang
-            elif len(lang) > 2 and lang[:2] in supported_languages:
+            elif len(lang) > 2 and lang[:2] in available_languages:
                 return lang[:2]
 
         return None
