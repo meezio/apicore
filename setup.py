@@ -1,19 +1,48 @@
+"""
+apicore
+=======
+
+Set of core libraries usefull for building REST API and Microservices based on Flask.
+
+The code is open source, release under MIT and written in Python 3.
+
+.. code:: bash
+
+    pip install apicore
+
+
+Features
+--------
+
+* Cross-origin resource sharing (CORS) ready
+* Data caching with redis server or direct in memory
+* Configuration file loader
+* A simple Logger
+* Raise exception conform to HTTP status codes
+* Authorization using JSON Web Token(JWT) issued from an OpenID Connect provider.
+
+Links
+-----
+
+* `documentation <http://apicore.readthedocs.io/en/latest/>`_
+* `sources <https://github.com/meezio/apicore>`_
+* `compagny <https://meez.io>`_
+"""
+
 from setuptools import setup
 
 setup(
     name='apicore',
-    version=1.0,
+    version='1.0.0',
     packages=['apicore'],
     author="Meezio SAS",
     author_email="dev@meez.io",
     description="Core lib for REST API",
-    # long_description=open('README.md').read(),
-    # Active la prise en compte du fichier MANIFEST.in
-    # include_package_data=True,
+    long_description=__doc__,
     url='https://github.com/meezio/apicore',
     classifiers=[
         "Intended Audience :: Developers",
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Environment :: No Input/Output (Daemon)",
         "Framework :: Flask",
         "License :: OSI Approved :: MIT License",
