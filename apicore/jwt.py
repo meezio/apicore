@@ -89,10 +89,10 @@ def Authorization():
         Logger.info("Caching keys for issuer '{}'".format(issuer))
         oidcConf = getJSON("{}/.well-known/openid-configuration".format(issuer))
         keys = getJSON(oidcConf.get("jwks_uri")).get("keys")
-        # Cache expires in 365 or less day depending on 'exp' attribute in JWS
+        # Cache expires in 365 or less day depending on 'exp' attribute of keys
         ts = time.mktime(datetime.datetime.utcnow().timetuple()) + (365 * 24 * 60 * 60)  # timespamp now + 365days
         for k in keys:
-            expire = k.get('exp', ts)
+            expire = k.get('exp', int(ts))
             kkid = k.get('kid')
 
             # convert timespam from ms to s
