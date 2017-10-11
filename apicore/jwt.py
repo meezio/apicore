@@ -88,6 +88,7 @@ def Authorization():
     if not key:
         Logger.info("Caching keys for issuer '{}'".format(issuer))
         oidcConf = getJSON("{}/.well-known/openid-configuration".format(issuer))
+        # TODO https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfigurationValidation
         keys = getJSON(oidcConf.get("jwks_uri")).get("keys")
         # Cache expires in 365 or less day depending on 'exp' attribute of keys
         ts = time.mktime(datetime.datetime.utcnow().timetuple()) + (365 * 24 * 60 * 60)  # timespamp now + 365days
@@ -103,6 +104,8 @@ def Authorization():
             key = cache.get("{}@{}".format(issuer, kid))
 
     try:
+        # TODO http://python-jose.readthedocs.io/en/latest/jwt/api.html
+        # https://developers.google.com/identity/smartlock-passwords/android/idtoken-auth#verify_the_id_token_on_the_backend
         userProfile = jwt.decode(token, key, options={"verify_aud": False, "verify_iss": False, "verify_sub": False, "verify_exp": config.tokenExpire})
         return userProfile
     except ExpiredSignatureError as ex:
