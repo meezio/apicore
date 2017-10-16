@@ -28,12 +28,14 @@ from flask import Flask
 from flask import request
 from flask import jsonify
 from .config import config
+from .openapi import OpenAPI
 
 
 class API(Flask):
     def __init__(self, import_name):
         super(API, self).__init__(import_name)
         self.prefix = ""
+        self.oas = OpenAPI(config.app_name)
 
         # Format internal error message to JSON
         for code in default_exceptions.keys():
@@ -45,12 +47,37 @@ class API(Flask):
 
     # Add prefix to route
     def route(self, rule, **options):
+        methods = options.get("methods", ["GET"])
+
         def decorator(f):
+            self.oas.addEndpoint(rule, methods, f.__doc__, f.__name__)
             f.__name__ = self.prefix + "_" + f.__name__
             endpoint = options.pop('endpoint', None)
             self.add_url_rule(self.prefix + rule, endpoint, f, **options)
             return f
         return decorator
+
+    def validate(self, func):
+        def wrapper(*args, **kwargs):
+            # TODO Check param, request.headers, cookies, *args, **kwargs, queryn body,... (400 et 406)
+            response = self.oas.check(func.__name__, "GET")
+            if response:
+                return response
+            else:
+                return func(*args, **kwargs)
+
+        wrapper.__name__ = func.__name__
+        wrapper.__doc__ = func.__doc__
+        return wrapper
+
+    def fake(self, func):
+        def wrapper(*args, **kwargs):
+            response = func(*args, **kwargs)
+            # TODO si response.code  entre 200 et 300 alors oas.fake() sinon renvoi response
+            return self.oas.fake(func.__name__, "GET")
+        wrapper.__name__ = func.__name__
+        wrapper.__doc__ = func.__doc__
+        return wrapper
 
     # Return error information if debug_level = 1,
     # if 0 return HTTP code 500 and generic HTTP message
@@ -73,7 +100,7 @@ class API(Flask):
 
     # Function to be run after each request to set headers
     def __setHeaders(self, response):
-        response.headers.add('Server', config.server_name)
+        response.headers.add('Server', "{} API Server".format(config.app_name))
         response.headers.add('Access-Control-Allow-Origin', '*')
         if request.method == 'OPTIONS':
             response.headers.add('Access-Control-Allow-Methods', 'DELETE, GET, HEAD, PATCH, POST, PUT')
@@ -81,3 +108,8 @@ class API(Flask):
         return response
 
 api = API(__name__)
+
+
+@api.route(api.oas.endpoint)
+def apispecs():
+    return jsonify(api.oas.spec)

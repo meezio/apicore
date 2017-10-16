@@ -65,7 +65,7 @@ class Config:
 
     def __setDefault(self):
         # Service name
-        self.data['server_name'] = "API server"
+        self.data['app_name'] = "Application"
         # Active debug
         self.data['debug'] = True
         # Accept all JWT from issuers from this list

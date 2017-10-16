@@ -1,4 +1,4 @@
-server_name: API server
+app_name: My App
 debug: true
 issWhitelist:
     - https://accounts.google.com

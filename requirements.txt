@@ -17,6 +17,7 @@ pytest==3.0.4
 pytest-cache==1.0
 pytest-pep8==1.0.6
 python-jose==1.3.2
+redis==2.10.6
 requests==2.12.1
 shellescape==3.4.1
 six==1.10.0
