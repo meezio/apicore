@@ -4,18 +4,28 @@ from .logger import Logger
 
 
 class OpenAPI:
-    def __init__(self, appname, endpoint="/openapi.json"):
-        # TODO si openapi.yaml existe le charger sinon :
-        self.spec = dict()
-        self.spec["openapi"] = "3.0.0"
-        self.spec["info"] = dict()
-        self.spec["info"]["title"] = "{} REST API Specifications".format(appname)
-        self.spec["info"]["version"] = "1.0.0"
-        self.spec["paths"] = dict()
+    def __init__(self, appname, endpoint="/openapi.json", openApiFile="openapi.yaml"):
         self.endpoint = endpoint
         self._pattern = re.compile(r"<([^<]*:)?([^<]*)>")
         self._replace = r"{\2}"
         self._doc = dict()
+
+        self.spec = dict()
+        self.spec["info"] = dict()
+        self.spec["info"]["title"] = "{} REST API Specifications".format(appname)
+        self.spec["info"]["version"] = "1.0.0"
+        self.spec["paths"] = dict()
+
+        try:
+            with open(openApiFile) as f:
+                data = yaml.load(f)
+                if data:
+                    self.spec.update(data)
+                Logger.info("'{}' loaded".format(openApiFile))
+        except FileNotFoundError:
+            pass
+
+        self.spec["openapi"] = "3.0.0"
 
     def addEndpoint(self, rule, methods, docstring, funcName):
         if docstring:

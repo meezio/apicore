@@ -1,3 +1,6 @@
+routes
+main.py
+openapi.yaml
 docs/_build/*
 build
 dist

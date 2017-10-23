@@ -60,6 +60,7 @@ class API(Flask):
     def validate(self, func):
         def wrapper(*args, **kwargs):
             # TODO Check param, request.headers, cookies, *args, **kwargs, queryn body,... (400 et 406)
+            # TODO recup la method pour envoyer dans la fonction :
             response = self.oas.check(func.__name__, "GET")
             if response:
                 return response
@@ -74,6 +75,7 @@ class API(Flask):
         def wrapper(*args, **kwargs):
             response = func(*args, **kwargs)
             # TODO si response.code  entre 200 et 300 alors oas.fake() sinon renvoi response
+            # TODO recup la method pour envoyer dans la fonction :
             return self.oas.fake(func.__name__, "GET")
         wrapper.__name__ = func.__name__
         wrapper.__doc__ = func.__doc__

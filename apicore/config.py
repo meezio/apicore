@@ -54,6 +54,7 @@ class Config:
                 data = yaml.load(f)
                 if data:
                     self.data.update(data)
+                Logger.info("'{}' loaded".format(confFile))
         except FileNotFoundError:
                 Logger.error("Configuration file not found")
 
