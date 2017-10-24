@@ -22,9 +22,10 @@
 # SOFTWARE.
 ################################################################################
 
+from urllib.parse import urlparse
 from werkzeug.exceptions import default_exceptions
 from werkzeug.exceptions import HTTPException
-from flask import Flask
+from flask import Flask, render_template
 from flask import request
 from flask import jsonify
 from .config import config
@@ -33,7 +34,8 @@ from .openapi import OpenAPI
 
 class API(Flask):
     def __init__(self, import_name):
-        super(API, self).__init__(import_name)
+        staticUrlPath = config.swagger_ui[:config.swagger_ui.rfind('/')]  # Remove char from the end until slash is found
+        super(API, self).__init__(import_name, static_url_path=staticUrlPath, static_folder="swagger", template_folder="templates")
         self.prefix = ""
         self.oas = OpenAPI(config.app_name)
 
@@ -115,3 +117,12 @@ api = API(__name__)
 @api.route(api.oas.endpoint)
 def apispecs():
     return jsonify(api.oas.spec)
+
+
+@api.route(config.swagger_ui)
+def swaggerUI():
+    # TODO use "Forwarded" header
+    url = urlparse(request.url)
+    host = request.headers.get("X-Forwarded-Host", request.headers.get("Host", url.hostname))
+    scheme = request.headers.get("X-Forwarded-Proto", url.scheme)
+    return render_template('index.html', url="{}://{}{}".format(scheme, host, api.oas.endpoint))

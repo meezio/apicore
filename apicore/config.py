@@ -77,5 +77,8 @@ class Config:
         self.data['tokenExpire'] = True
         # redis://:password@localhost:6379/10
         self.data['redis'] = None
+        # Relatif URL path to embedded swagger UI
+        self.data['swagger_ui'] = "/"
+
 
 config = Config()
