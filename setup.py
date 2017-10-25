@@ -39,6 +39,7 @@ setup(
     author_email="dev@meez.io",
     description="Core lib for REST API",
     long_description=__doc__,
+    include_package_data=True,
     url='https://github.com/meezio/apicore',
     classifiers=[
         "Intended Audience :: Developers",

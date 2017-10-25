@@ -1,6 +1,6 @@
 routes
 main.py
-openapi.yaml
+conf/*
 docs/_build/*
 build
 dist

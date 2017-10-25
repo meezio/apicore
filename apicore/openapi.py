@@ -4,7 +4,7 @@ from .logger import Logger
 
 
 class OpenAPI:
-    def __init__(self, appname, endpoint="/openapi.json", openApiFile="openapi.yaml"):
+    def __init__(self, appname, endpoint="/openapi.json", openApiFile="conf/openapi.yaml"):
         self.endpoint = endpoint
         self._pattern = re.compile(r"<([^<]*:)?([^<]*)>")
         self._replace = r"{\2}"
@@ -12,7 +12,7 @@ class OpenAPI:
 
         self.spec = dict()
         self.spec["info"] = dict()
-        self.spec["info"]["title"] = "{} REST API Specifications".format(appname)
+        self.spec["info"]["title"] = "{} API Specifications".format(appname)
         self.spec["info"]["version"] = "1.0.0"
         self.spec["paths"] = dict()
 

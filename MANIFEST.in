@@ -1,0 +1,2 @@
+recursive-include apicore/static *
+recursive-include apicore/templates *

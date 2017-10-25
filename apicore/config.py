@@ -40,9 +40,10 @@ class Config:
 
 
     """
-    def __init__(self):
+    def __init__(self, configFile="conf/config.yaml"):
         self.data = dict()
         self.__setDefault()
+        self.load(configFile)
 
     def load(self, confFile='config.yaml'):
         """ Load config file from filesystem.

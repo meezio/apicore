@@ -35,7 +35,7 @@ from .openapi import OpenAPI
 class API(Flask):
     def __init__(self, import_name):
         staticUrlPath = config.swagger_ui[:config.swagger_ui.rfind('/')]  # Remove char from the end until slash is found
-        super(API, self).__init__(import_name, static_url_path=staticUrlPath, static_folder="swagger", template_folder="templates")
+        super(API, self).__init__(import_name, static_url_path=staticUrlPath)
         self.prefix = ""
         self.oas = OpenAPI(config.app_name)
 
