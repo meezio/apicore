@@ -6,4 +6,10 @@ Documentation available at http://apicore.readthedocs.io/en/latest/
 
 ## Features
 
-
+* Cross-origin resource sharing (CORS) ready
+* Data caching with redis server or direct in memory
+* Configuration file loader
+* A simple Logger
+* Raise exception conform to HTTP status codes
+* Authorization using JSON Web Token(JWT) issued from an OpenID Connect provider
+* OpenAPI 3.0 specification embedded with Swagger UI

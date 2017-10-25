@@ -9,3 +9,4 @@ apicore.egg-info
 venv
 __pycache__
 TODO.md
+*.pyc

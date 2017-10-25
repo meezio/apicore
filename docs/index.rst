@@ -18,7 +18,8 @@ Features
 * Configuration file loader
 * A simple Logger
 * Raise exception conform to HTTP status codes
-* Authorization using JSON Web Token(JWT) issued from an OpenID Connect provider.
+* Authorization using JSON Web Token(JWT) issued from an OpenID Connect provider
+* OpenAPI 3.0 specification embedded with Swagger UI
 
 Example
 -------
@@ -29,18 +30,18 @@ Example
 
     from apicore import api, Logger, config, Http409Exception, Authorization
 
-    config.load('config.yaml')
-    Logger.info("{} Starting".format(config.server_name))
+    Logger.info("Starting {} API Server...".format(config.app_name))
     api.prefix = "/api"
-
-
-    @api.route('/')
-    def hello():
-        return "API v0.1"
 
 
     @api.route('/error/')
     def error():
+        """
+        summary: Raise an execption
+        responses:
+          409:
+              description: Conflict
+        """
         raise Http409Exception()
 
 
@@ -59,12 +60,12 @@ Example
 Configuration
 -------------
 
-Configuration is set in a YAML file (see :py:class:`apicore.config.Config`).
+Configuration is set in ``conf/config.yaml`` file (see :py:class:`apicore.config.Config`).
 
 +--------------+---------------+------------------------------------------------------------------------------------------------+
 | Name         | Default value | Description                                                                                    |
 +==============+===============+================================================================================================+
-| server_name  | 'API server'  | Service name.                                                                                  |
+| app_name     | "Meezio"      | Application's name.                                                                            |
 +--------------+---------------+------------------------------------------------------------------------------------------------+
 | debug        | True          | Active debug mode.                                                                             |
 +--------------+---------------+------------------------------------------------------------------------------------------------+
@@ -76,7 +77,78 @@ Configuration is set in a YAML file (see :py:class:`apicore.config.Config`).
 +--------------+---------------+------------------------------------------------------------------------------------------------+
 | redis        | None          | Redis server used for caching data : redis://:password@localhost:6379/0. If not set use memory.|
 +--------------+---------------+------------------------------------------------------------------------------------------------+
+| swagger_ui   | "/"           | Relative URL path to embedded Swagger UI.                                                      |
++--------------+---------------+------------------------------------------------------------------------------------------------+
 
+OpenAPI 3.0
+-----------
+
+* See `specification <https://github.com/OAI/OpenAPI-Specification>`_ for syntax.
+* Document route's methods with `Operation Object <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#operationObject>`_ using yaml syntax.
+* Document your API in ``conf/openapi.yaml`` file.
+* Access your documentation through a python dictionary : ``api.oas.specs``.
+* Your spec is available at ``http[s]://<hostname>/openapi.json``.
+* Default path to ``http[s]://<hostname>/`` to see your spec with Swagger UI (set ``swagger_ui`` in ``conf/config.yaml`` to change path)
+* Full exemple :
+
+.. code:: python
+
+    @api.route('/sellers/<idseller>/', methods=['GET', 'PUT'])
+    def seller(idseller):
+        """
+        description: "Path Item Object" level here, only common_responses is added to OpenAPi specification. Next level are "Operation Object".
+        parameters:
+          - name: idseller
+            in: path
+            description: uuid of seller
+            required: true
+            type: string
+            format: uuid
+        common_responses:
+            400:
+             description: Invalid request
+            401:
+              description: Authentification required
+            403:
+              description: Ressource access denied
+            500:
+              description: Server internal error
+        ---
+          tags:
+            - profile
+          summary: Find a seller profile by ID
+          responses:
+            200:
+              description: Success
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/Seller'
+            404:
+              description: Ressource does not exist
+            406:
+              description: Nothing to send maching Access-* headers
+        ---
+          tags:
+            - profile
+          summary: Update seller profile
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Seller'
+              required: true
+          responses:
+            200:
+              description: Success
+        """
+        pass
+
+        
+        print(api.oas.spec)
+
+
+    
 APIs
 ----
 
