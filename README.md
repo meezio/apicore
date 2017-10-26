@@ -17,13 +17,19 @@ Documentation available at http://apicore.readthedocs.io/en/latest/
 ## Release cheat sheet
 
 * Update version in ``setup.py``.
+* Update doc
+```
+cd docs
+make html
+cd ..
+```
 * git
 ```
 git checkout master
 git merge -m "..." develop
-git push
 git tag x.y.z
 git push --tags
+git push
 ```
 * PyPI
 ```
@@ -35,6 +41,9 @@ twine upload dist/*
 ```
 cd docker
 docker build -t meezio/apicore .
-docker build -t meezio/apicore:x.y.z .
+# docker build -t meezio/apicore:x.y.z .
+docker tag meezio/apicore meezio/apicore:x.y.z
+docker tag meezio/apicore meezio/apicore:x.y
+docker tag meezio/apicore meezio/apicore:x
 docker push meezio/apicore
 ```

@@ -12,8 +12,6 @@ class OpenAPI:
 
         self.spec = dict()
         self.spec["info"] = dict()
-        self.spec["info"]["title"] = "{} API Specifications".format(appname)
-        self.spec["info"]["version"] = "1.0.0"
         self.spec["paths"] = dict()
 
         try:
@@ -21,6 +19,10 @@ class OpenAPI:
                 data = yaml.load(f)
                 if data:
                     self.spec.update(data)
+                    if "title" not in self.spec["info"]:
+                        self.spec["info"]["title"] = "{} API Specifications".format(appname)
+                    if "version" not in self.spec["info"]:
+                        self.spec["info"]["version"] = "1.0.0"
                 Logger.info("'{}' loaded".format(openApiFile))
         except FileNotFoundError:
             pass
