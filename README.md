@@ -26,7 +26,7 @@ cd ..
 * git
 ```
 git checkout master
-git merge -m "..." develop
+git merge develop
 git tag x.y.z
 git push --tags
 git push
@@ -40,8 +40,7 @@ twine upload dist/*
 * Docker
 ```
 cd docker
-docker build -t meezio/apicore .
-# docker build -t meezio/apicore:x.y.z .
+docker build --build-arg VERSION=x.y.z -t meezio/apicore .
 docker tag meezio/apicore meezio/apicore:x.y.z
 docker tag meezio/apicore meezio/apicore:x.y
 docker tag meezio/apicore meezio/apicore:x
