@@ -25,7 +25,7 @@
 from werkzeug import exceptions
 from .logger import Logger
 
-__all__ = ['Http400Exception', 'Http401Exception', 'Http403Exception', 'Http404Exception', 'Http409Exception', 'Http500Exception']
+__all__ = ['Http400Exception', 'Http401Exception', 'Http402Exception', 'Http403Exception', 'Http404Exception', 'Http406Exception', 'Http409Exception', 'Http500Exception', 'Http501Exception']
 
 """
 Exceptions are provided to send regular HTTP error code and messages.
@@ -71,6 +71,21 @@ class Http401Exception(exceptions.Unauthorized):
         Logger.info("HTTP {} : {}".format(401, self.description))
 
 
+class Http402Exception(exceptions.HTTPException):
+    code = 402
+    description = ('Payment Required')
+
+    """ Create a 402 *Payment Required* exception.
+
+    :param str infos: A message describing the error.
+    :param boolean verbose: True to send infos in HTTP response.
+    """
+    def __init__(self, description=None, verbose=False):
+        self.verbose = verbose
+        exceptions.HTTPException.__init__(self, description, None)
+        Logger.info("HTTP {} : {}".format(self.code, self.description))
+
+
 class Http403Exception(exceptions.Forbidden):
     """ Create a 403 *Forbidden* exception.
 
@@ -95,6 +110,18 @@ class Http404Exception(exceptions.NotFound):
         Logger.info("HTTP {} : {}".format(404, self.description))
 
 
+class Http406Exception(exceptions.NotAcceptable):
+    """ Create a 406 *Not Acceptable* exception.
+
+    :param str infos: A message describing the error.
+    :param boolean verbose: True to send infos in HTTP response.
+    """
+    def __init__(self, description=None, verbose=False):
+        self.verbose = verbose
+        exceptions.NotAcceptable.__init__(self, description, None)
+        Logger.info("HTTP {} : {}".format(406, self.description))
+
+
 class Http409Exception(exceptions.Conflict):
     """ Create a 409 *Conflict* exception.
 
@@ -117,3 +144,18 @@ class Http500Exception(exceptions.InternalServerError):
         self.verbose = verbose
         exceptions.InternalServerError.__init__(self, description, None)
         Logger.error(self.description)
+
+
+class Http501Exception(exceptions.NotImplemented):
+    """ Create a 501 *Not Implemented* exception.
+
+    :param str infos: A message describing the error.
+    :param boolean verbose: True to send infos in HTTP response.
+    """
+    def __init__(self, description=None, verbose=False):
+        self.verbose = verbose
+        exceptions.NotImplemented.__init__(self, description, None)
+        Logger.info("HTTP {} : {}".format(501, self.description))
+
+
+exceptions.default_exceptions[Http402Exception.code] = Http402Exception
