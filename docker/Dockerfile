@@ -14,7 +14,8 @@ RUN apt-get -y install ca-certificates uwsgi-core uwsgi-plugin-python3 build-ess
 # Install app files
 ENV HOME /opt/api
 WORKDIR /opt/api
-RUN pip3 install --no-cache-dir apicore
+ARG VERSION
+RUN pip3 install --no-cache-dir apicore==$VERSION
 
 # Setup directories
 RUN mkdir /var/data && chown -R www-data:www-data /var/data
