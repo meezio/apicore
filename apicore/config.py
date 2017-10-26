@@ -68,6 +68,8 @@ class Config:
     def __setDefault(self):
         # Service name
         self.data['app_name'] = "Meezio"
+        # URL prefix
+        self.data['prefix'] = ""
         # Active debug
         self.data['debug'] = True
         # Accept all JWT from issuers from this list

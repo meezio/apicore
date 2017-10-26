@@ -31,7 +31,6 @@ Example
     from apicore import api, Logger, config, Http409Exception, Authorization
 
     Logger.info("Starting {} API Server...".format(config.app_name))
-    api.prefix = "/api"
 
 
     @api.route('/error/')
@@ -67,6 +66,8 @@ Configuration is set in ``conf/config.yaml`` file (see :py:class:`apicore.config
 +==============+===============+================================================================================================+
 | app_name     | "Meezio"      | Application's name.                                                                            |
 +--------------+---------------+------------------------------------------------------------------------------------------------+
+| prefix       | ""            | Add a prefix to URL path (ie: "/api").                                                          |
++--------------+---------------+------------------------------------------------------------------------------------------------+
 | debug        | True          | Active debug mode.                                                                             |
 +--------------+---------------+------------------------------------------------------------------------------------------------+
 | issWhitelist | None          | Whitelist for OIDC issuers. If not set, every issuers are allowed except ones from blacklist.  |
@@ -77,7 +78,7 @@ Configuration is set in ``conf/config.yaml`` file (see :py:class:`apicore.config
 +--------------+---------------+------------------------------------------------------------------------------------------------+
 | redis        | None          | Redis server used for caching data : redis://:password@localhost:6379/0. If not set use memory.|
 +--------------+---------------+------------------------------------------------------------------------------------------------+
-| swagger_ui   | "/"           | Relative URL path to embedded Swagger UI.                                                      |
+| swagger_ui   | "/"           | Relative URL path to embedded Swagger UI (``prefix`` + ``swagger_ui``).                                |
 +--------------+---------------+------------------------------------------------------------------------------------------------+
 
 OpenAPI 3.0

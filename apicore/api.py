@@ -34,9 +34,10 @@ from .openapi import OpenAPI
 
 class API(Flask):
     def __init__(self, import_name):
-        staticUrlPath = config.swagger_ui[:config.swagger_ui.rfind('/')]  # Remove char from the end until slash is found
+        self.prefix = config.prefix
+        fullSwaggerPath = self.prefix + config.swagger_ui
+        staticUrlPath = fullSwaggerPath[:fullSwaggerPath.rfind('/')]  # Remove char from the end until slash is found
         super(API, self).__init__(import_name, static_url_path=staticUrlPath)
-        self.prefix = ""
         self.oas = OpenAPI(config.app_name)
 
         # Format internal error message to JSON
@@ -125,4 +126,4 @@ def swaggerUI():
     url = urlparse(request.url)
     host = request.headers.get("X-Forwarded-Host", request.headers.get("Host", url.hostname))
     scheme = request.headers.get("X-Forwarded-Proto", url.scheme)
-    return render_template('index.html', url="{}://{}{}".format(scheme, host, api.oas.endpoint))
+    return render_template('index.html', url="{}://{}{}{}".format(scheme, host, api.prefix, api.oas.endpoint))
