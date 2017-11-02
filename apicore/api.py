@@ -26,10 +26,11 @@ from urllib.parse import urlparse
 from werkzeug.exceptions import default_exceptions
 from werkzeug.exceptions import HTTPException
 from flask import Flask, render_template
-from flask import request
+from flask import request, Response
 from flask import jsonify
 from .config import config
 from .openapi import OpenAPI
+from .json import toJSON
 
 
 class API(Flask):
@@ -111,6 +112,10 @@ class API(Flask):
             response.headers.add('Access-Control-Allow-Methods', 'DELETE, GET, HEAD, PATCH, POST, PUT')
             response.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type"
         return response
+
+    def jsonResponse(self, data, code=200):
+        return toJSON(data), code, {'Content-Type': 'application/json; charset=utf-8'}
+
 
 api = API(__name__)
 
