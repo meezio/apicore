@@ -22,3 +22,4 @@ requests==2.12.1
 shellescape==3.4.1
 six==1.10.0
 termcolor==1.1.0
+Sphinx==1.6.5

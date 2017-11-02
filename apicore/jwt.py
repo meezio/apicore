@@ -106,6 +106,9 @@ def Authorization():
     try:
         # TODO http://python-jose.readthedocs.io/en/latest/jwt/api.html
         # https://developers.google.com/identity/smartlock-passwords/android/idtoken-auth#verify_the_id_token_on_the_backend
+        # If the ID Token is encrypted, decrypt it using the keys and algorithms that the Client specified during Registration
+        # If encryption was negotiated with the OP at Registration time and the ID Token is not encrypted, reject it.
+        # you must verify the token's signature, and verify the token's aud, iss, and exp claims.
         userProfile = jwt.decode(token, key, options={"verify_aud": False, "verify_iss": False, "verify_sub": False, "verify_exp": config.tokenExpire})
         return userProfile
     except ExpiredSignatureError as ex:
