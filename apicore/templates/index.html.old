@@ -26,6 +26,9 @@
       margin:0;
       background: #fafafa;
     }
+    .topbar {
+      display: none;
+    }
   </style>
 </head>
 
@@ -74,7 +77,7 @@ window.onload = function() {
   
   // Build a system
   const ui = SwaggerUIBundle({
-    url: "http://petstore.swagger.io/v2/swagger.json",
+    url: "{{url}}",
     dom_id: '#swagger-ui',
     deepLinking: true,
     presets: [

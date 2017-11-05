@@ -11,7 +11,13 @@ class Db:
 
     @classmethod
     def getMany(cls, collection, offset=0, limit=0, sort=None):
-        return list(cls.db[collection].find({}, skip=offset, limit=limit, sort=sort))
+        data = list(cls.db[collection].find({}, skip=offset, limit=limit, sort=sort))
+
+        for row in data:
+            if "_id" in row:
+                row["uuid"] = row.pop("_id")
+
+        return data
 
     @classmethod
     def get(cls, collection, identifier, key="_id"):
@@ -23,6 +29,8 @@ class Db:
 
         data = cls.db[collection].find_one({key: identifier})
         if data:
+            if "_id" in data:
+                data["uuid"] = data.pop("_id")
             return data
         else:
             raise Http404Exception()
