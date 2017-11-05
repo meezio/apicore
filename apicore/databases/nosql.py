@@ -62,9 +62,7 @@ class Db:
             except:
                 raise Http400Exception()
 
-        resu = cls.db[collection].replace_one({key: identifier}, data)
-        if resu.matched_count < 1:
-            raise Http404Exception()
+        resu = cls.db[collection].replace_one({key: identifier}, data, True)
 
     @classmethod
     def delete(cls, collection, identifier, key="_id"):
