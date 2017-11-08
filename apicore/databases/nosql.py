@@ -10,8 +10,8 @@ class Db:
     db = client["wiri"]  # TODO from config file
 
     @classmethod
-    def getMany(cls, collection, offset=0, limit=0, sort=None):
-        data = list(cls.db[collection].find({}, skip=offset, limit=limit, sort=sort))
+    def getMany(cls, collection, offset=0, limit=0, sort=None, match={}):
+        data = list(cls.db[collection].find(match, skip=offset, limit=limit, sort=sort))
 
         for row in data:
             if "_id" in row:
