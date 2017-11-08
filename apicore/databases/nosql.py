@@ -37,7 +37,14 @@ class Db:
 
     @classmethod
     def getleftJoin(cls, collection, identifier, rightField, key="_id", projects=[]):
-        data = cls._leftJoin(collection, identifier, rightField, key, projects)
+        if key == "_id":
+            try:
+                identifier = ObjectId(identifier)
+            except:
+                raise Http400Exception()
+
+        data = cls._leftJoin(collection, {key: identifier}, rightField, projects)
+
         if data:
             data = data.pop()
             if "_id" in data:
@@ -47,8 +54,14 @@ class Db:
             raise Http404Exception()
 
     @classmethod
-    def getManyleftJoin(cls, collection, rightField, offset=0, limit=0, sort=None, projects=[]):
-        pass
+    def getManyleftJoin(cls, collection, match, rightField, offset=0, limit=0, sort=None, projects=[]):
+        data = cls._leftJoin(collection, match, rightField, projects, offset, limit, sort)
+
+        for row in data:
+            if "_id" in row:
+                row["uuid"] = row.pop("_id")
+
+        return data
 
     @classmethod
     def getleftJoinMany(cls, collection, identifier, rightField, key="_id", projects=[]):
@@ -59,29 +72,20 @@ class Db:
         pass
 
     @classmethod
-    def _leftJoin(cls, collection, identifier, rightField, key="_id", projects=[]):
-        if key == "_id":
-            try:
-                identifier = ObjectId(identifier)
-            except:
-                raise Http400Exception()
-
-        pipeline = [
-            {"$match": {key: identifier}},
-            {"$lookup": {"from": rightField, "localField": rightField, "foreignField": "_id", "as": rightField}}
-        ]
+    def _leftJoin(cls, collection, match, rightField, projects=[], offset=0, limit=0, sort=None):
+        pipeline = [{"$match": match}]
+        if offset:
+            pipeline.append({"$skip": offset})
+        if limit:
+            pipeline.append({"$limit": limit})
+        pipeline.append({"$lookup": {"from": rightField, "localField": rightField, "foreignField": "_id", "as": rightField}})
         for project in projects:
             pipeline.append({"$project": project})
+        if sort:
+            pipeline.append({"$sort": dict(sort)})
         print(pipeline)
 
-        data = list(cls.db[collection].aggregate(pipeline))
-
-        if data:
-            if "_id" in data:
-                data["uuid"] = data.pop("_id")
-            return data
-        else:
-            raise Http404Exception()
+        return list(cls.db[collection].aggregate(pipeline))
 
     @classmethod
     def post(cls, data, collection):
