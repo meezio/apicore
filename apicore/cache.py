@@ -23,6 +23,7 @@
 ################################################################################
 
 import pickle
+import time
 import redis
 from .logger import Logger
 from .config import config
@@ -103,10 +104,18 @@ class _memory:
         self.data = dict()
 
     def set(self, key, value, expire):
-        self.data[key] = value
+        if expire:
+            expire = time.time() + expire
+
+        self.data[key] = {"value": value, "expire": expire}
 
     def get(self, key):
-        return self.data.get(key)
+        d = self.data.get(key)
+
+        if d["expire"] and d["expire"] < time.time():
+            return None
+        else:
+            return d["value"]
 
 
 cache = Cache()
