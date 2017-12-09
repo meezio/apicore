@@ -20,14 +20,15 @@ class Db:
         return data
 
     @classmethod
-    def get(cls, collection, identifier, key="_id"):
+    def get(cls, collection, identifier, key="_id", match={}):
         if key == "_id":
             try:
                 identifier = ObjectId(identifier)
             except:
                 raise Http400Exception()
 
-        data = cls.db[collection].find_one({key: identifier})
+        match[key] = identifier
+        data = cls.db[collection].find_one(match)
         if data:
             if "_id" in data:
                 data["uuid"] = data.pop("_id")
@@ -83,7 +84,6 @@ class Db:
             pipeline.append({"$project": project})
         if sort:
             pipeline.append({"$sort": dict(sort)})
-        print(pipeline)
 
         return list(cls.db[collection].aggregate(pipeline))
 
