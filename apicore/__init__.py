@@ -5,3 +5,4 @@ from .api import api
 from .jwt import Authorization
 from .cache import cache
 from .lang import Lang
+from .mail import Mail

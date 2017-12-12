@@ -22,22 +22,48 @@
 # SOFTWARE.
 ################################################################################
 
-from flask import request
+import smtplib
+from email.parser import Parser
+import pystache
+from .config import config
 
 
-class Lang:
-    @staticmethod
-    def best_match(available_languages, default=None):
-        """ Determine best language from list of available languages and from Accept-Language Header.
+class Mail:
+    """ Cache for the application.
+    To use by importing the instance :
 
-        :param list available_languages: List of available languages to match with.
-        :param str default: Language returned when no match found.
-        :return str: The best matching language or None if no matching.
-        """
-        for lang in request.accept_languages.values():
-            if lang in available_languages:
-                return lang
-            elif len(lang) > 2 and lang[:2] in available_languages:
-                return lang[:2]
+    exemple:
+        .. code::
 
-        return default
+            from apicore import Mail
+
+            mail = Mail("noreply@domain.tld", "john@doe.tld")
+            mail.setSubject("TEST")
+            mail.setContent("Hello", data)
+            mail.send()
+
+
+    .. note::
+
+        If ``redis`` URI is configured the cache is store in redis server, otherwise it is cache in memory.
+
+    """
+    def __init__(self, exp, rcpt):
+        self._host = config.smtp_host
+        self._exp = exp
+        self._rcpt = rcpt
+
+    def setContent(self, messagefile, data):
+        # TODO mix with data
+        with open(messagefile) as f:
+            self._message = f.read()
+
+        self._message = pystache.render(self._message, data)
+
+    def send(self):
+        print(config.debug)
+        print(self._message)
+        s = smtplib.SMTP(self._host)
+        s.set_debuglevel(1)
+        # s.sendmail(self._exp, self._rcpt, self._message.encode("utf8"))
+        s.quit()

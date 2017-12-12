@@ -82,6 +82,8 @@ class Config:
         self.data['redis'] = None
         # Relatif URL path to embedded swagger UI
         self.data['swagger_ui'] = "/"
+        # SMTP server used to sent email
+        self.data['smtp_host'] = "localhost"
 
 
 config = Config()
