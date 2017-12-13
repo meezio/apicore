@@ -54,16 +54,13 @@ class Mail:
         self._rcpt = rcpt
 
     def setContent(self, messagefile, data):
-        # TODO mix with data
         with open(messagefile) as f:
-            self._message = f.read()
+            template = f.read()
 
-        self._message = pystache.render(self._message, data)
+        self._message = pystache.render(template, data)
 
     def send(self):
-        print(config.debug)
-        print(self._message)
         s = smtplib.SMTP(self._host)
-        s.set_debuglevel(1)
-        # s.sendmail(self._exp, self._rcpt, self._message.encode("utf8"))
+        s.set_debuglevel(config.debug)
+        s.sendmail(self._exp, self._rcpt, self._message.encode("utf8"))
         s.quit()

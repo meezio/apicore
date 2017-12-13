@@ -59,6 +59,7 @@ setup(
         'Flask',
         'PyYAML',
         'python-jose',
-        'redis'
+        'redis',
+        'pystache'
     ]
 )

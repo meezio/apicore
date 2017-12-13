@@ -23,3 +23,5 @@ shellescape==3.4.1
 six==1.10.0
 termcolor==1.1.0
 Sphinx==1.6.5
+pystache==0.5.4
+
