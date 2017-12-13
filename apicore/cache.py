@@ -68,6 +68,13 @@ class Cache:
         """
         return self._getModule().get(key)
 
+    def delete(self, key):
+            """
+
+            :param str key: the key referencing the data to remove
+            """
+            return self._getModule().delete(key)
+
     def _getModule(self):
         if not self.module:
             if config.redis:
@@ -97,6 +104,9 @@ class _redis:
         else:
             return None
 
+    def delete(self, key):
+        data = self.conn.delete(key)
+
 
 class _memory:
     def __init__(self):
@@ -112,10 +122,16 @@ class _memory:
     def get(self, key):
         d = self.data.get(key)
 
-        if d["expire"] and d["expire"] < time.time():
+        if not d:
+            return None
+        elif d["expire"] and d["expire"] < time.time():
             return None
         else:
             return d["value"]
+
+    def delete(self, key):
+        if key in self.data:
+            del self.data[key]
 
 
 cache = Cache()
