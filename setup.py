@@ -29,12 +29,13 @@ Links
 * `Company <https://meez.io>`_
 """
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='apicore',
-    version='1.1.2',
-    packages=['apicore'],
+    version='1.1.3',
+    # packages=['apicore'],
+    packages=find_packages(),
     author="Meezio SAS",
     author_email="dev@meez.io",
     description="Core lib for REST API",
