@@ -94,7 +94,7 @@ class _redis:
     def set(self, key, value, expire):
         self.conn.set(key, pickle.dumps(value))
         if expire:
-            self.conn.expireat(key, expire)
+            self.conn.expire(key, expire)
 
     def get(self, key):
         data = self.conn.get(key)
