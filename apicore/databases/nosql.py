@@ -42,11 +42,6 @@ class MongoDB:
     def get(self, collection, identifier, key="_id", match=None):
         if match is None:
             match = {}
-        print("$$$$$$$$$$$")
-        print(collection)
-        print(identifier)
-        print(key)
-        print(match)
 
         if key == "_id":
             try:
@@ -55,9 +50,8 @@ class MongoDB:
                 raise Http400Exception()
 
         match[key] = identifier
-        print(collection, match)
         data = self.db[collection].find_one(match)
-        print(data)
+
         if data:
             if "_id" in data:
                 data["uuid"] = data.pop("_id")
