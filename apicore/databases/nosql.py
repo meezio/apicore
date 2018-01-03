@@ -6,21 +6,48 @@ from ..exceptions import Http400Exception, Http404Exception, Http409Exception
 client = MongoClient(connect=False)
 
 
-class Db:
-    db = client["wiri"]  # TODO from config file
+class MongoDB:
+    def __init__(self):
+        # TODO from config file
+        self.db = client["wiri"]
 
-    @classmethod
-    def getMany(cls, collection, offset=0, limit=0, sort=None, match={}):
-        data = list(cls.db[collection].find(match, skip=offset, limit=limit, sort=sort))
+    def getMany(self, collection, offset=0, limit=0, sort=None, match=None, projects=None):
+        if projects is None:
+            projects = []
+        if match is None:
+            match = {}
 
-        for row in data:
-            if "_id" in row:
-                row["uuid"] = row.pop("_id")
+        if projects:
+            pipeline = [{"$match": match}]
+            if offset:
+                pipeline.append({"$skip": offset})
+            if limit:
+                pipeline.append({"$limit": limit})
+            # pipeline.append({"$lookup": {"from": rightField, "localField": rightField, "foreignField": "_id", "as": rightField}})
+            for project in projects:
+                pipeline.append({"$project": project})
+            if sort:
+                pipeline.append({"$sort": dict(sort)})
 
-        return data
+            return list(self.db[collection].aggregate(pipeline))
+        else:
+            data = list(self.db[collection].find(match, skip=offset, limit=limit, sort=sort))
 
-    @classmethod
-    def get(cls, collection, identifier, key="_id", match={}):
+            for row in data:
+                if "_id" in row:
+                    row["uuid"] = row.pop("_id")
+
+            return data
+
+    def get(self, collection, identifier, key="_id", match=None):
+        if match is None:
+            match = {}
+        print("$$$$$$$$$$$")
+        print(collection)
+        print(identifier)
+        print(key)
+        print(match)
+
         if key == "_id":
             try:
                 identifier = ObjectId(identifier)
@@ -28,7 +55,9 @@ class Db:
                 raise Http400Exception()
 
         match[key] = identifier
-        data = cls.db[collection].find_one(match)
+        print(collection, match)
+        data = self.db[collection].find_one(match)
+        print(data)
         if data:
             if "_id" in data:
                 data["uuid"] = data.pop("_id")
@@ -36,15 +65,17 @@ class Db:
         else:
             raise Http404Exception()
 
-    @classmethod
-    def getleftJoin(cls, collection, identifier, rightField, key="_id", projects=[]):
+    def getleftJoin(self, collection, identifier, rightField, key="_id", projects=None):
+        if projects is None:
+            projects = []
+
         if key == "_id":
             try:
                 identifier = ObjectId(identifier)
             except:
                 raise Http400Exception()
 
-        data = cls._leftJoin(collection, {key: identifier}, rightField, projects)
+        data = self._leftJoin(collection, {key: identifier}, rightField, projects)
 
         if data:
             data = data.pop()
@@ -54,9 +85,11 @@ class Db:
         else:
             raise Http404Exception()
 
-    @classmethod
-    def getManyleftJoin(cls, collection, match, rightField, offset=0, limit=0, sort=None, projects=[]):
-        data = cls._leftJoin(collection, match, rightField, projects, offset, limit, sort)
+    def getManyleftJoin(self, collection, match, rightField, offset=0, limit=0, sort=None, projects=None):
+        if projects is None:
+            projects = []
+
+        data = self._leftJoin(collection, match, rightField, projects, offset, limit, sort)
 
         for row in data:
             if "_id" in row:
@@ -64,16 +97,21 @@ class Db:
 
         return data
 
-    @classmethod
-    def getleftJoinMany(cls, collection, identifier, rightField, key="_id", projects=[]):
+    def getleftJoinMany(self, collection, identifier, rightField, key="_id", projects=None):
+        if projects is None:
+            projects = []
         pass
 
-    @classmethod
-    def getManyleftJoinMany(cls, collection, offset=0, limit=0, sort=None, projects=[]):
+    def getManyleftJoinMany(self, collection, offset=0, limit=0, sort=None, projects=None):
+        if projects is None:
+            projects = []
+
         pass
 
-    @classmethod
-    def _leftJoin(cls, collection, match, rightField, projects=[], offset=0, limit=0, sort=None):
+    def _leftJoin(self, collection, match, rightField, projects=None, offset=0, limit=0, sort=None):
+        if projects is None:
+            projects = []
+
         pipeline = [{"$match": match}]
         if offset:
             pipeline.append({"$skip": offset})
@@ -85,45 +123,43 @@ class Db:
         if sort:
             pipeline.append({"$sort": dict(sort)})
 
-        return list(cls.db[collection].aggregate(pipeline))
+        return list(self.db[collection].aggregate(pipeline))
 
-    @classmethod
-    def post(cls, data, collection):
+    def post(self, data, collection):
         try:
-            return cls.db[collection].insert_one(data).inserted_id
+            return self.db[collection].insert_one(data).inserted_id
         except errors.DuplicateKeyError:
             raise Http409Exception("Already registered")
 
-    @classmethod
-    def patch(cls, data, collection, identifier, key="_id"):
+    def patch(self, data, collection, identifier, key="_id"):
         if key == "_id":
             try:
                 identifier = ObjectId(identifier)
             except:
                 raise Http400Exception()
 
-        cls.db[collection].update_one({key: identifier}, {'$set': data})
+        self.db[collection].update_one({key: identifier}, {'$set': data})
 
-    @classmethod
-    def patchMany(cls, data, collection, mongofilter):
-        cls.db[collection].update_many(mongofilter, {'$set': data})
+    def patchMany(self, data, collection, mongofilter):
+        self.db[collection].update_many(mongofilter, {'$set': data})
 
-    @classmethod
-    def put(cls, data, collection, identifier, key="_id"):
+    def put(self, data, collection, identifier, key="_id"):
         if key == "_id":
             try:
                 identifier = ObjectId(identifier)
             except:
                 raise Http400Exception()
 
-        cls.db[collection].replace_one({key: identifier}, data, True)
+        self.db[collection].replace_one({key: identifier}, data, True)
 
-    @classmethod
-    def delete(cls, collection, identifier, key="_id"):
+    def delete(self, collection, identifier, key="_id"):
         if key == "_id":
             try:
                 identifier = ObjectId(identifier)
             except:
                 raise Http400Exception()
 
-        cls.db[collection].delete_one({key: identifier})
+        self.db[collection].delete_one({key: identifier})
+
+
+Db = MongoDB()
