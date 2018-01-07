@@ -25,6 +25,7 @@ cd ..
 ```
 * git
 ```
+git commit -m ""
 git checkout master
 git merge develop
 git tag x.y.z

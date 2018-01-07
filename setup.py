@@ -33,7 +33,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='apicore',
-    version='1.1.3',
+    version='1.1.4',
     # packages=['apicore'],
     packages=find_packages(),
     author="Meezio SAS",
@@ -61,6 +61,7 @@ setup(
         'PyYAML',
         'python-jose',
         'redis',
-        'pystache'
+        'pystache',
+        'pymongo'
     ]
 )
