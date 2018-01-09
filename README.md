@@ -25,7 +25,8 @@ cd ..
 ```
 * git
 ```
-git commit -m ""
+git add -A .
+git commit -m "Release x.y.z"
 git checkout master
 git merge develop
 git tag x.y.z

@@ -1,6 +1,9 @@
 import yaml
 import re
+from flask import request
 from .logger import Logger
+from .exceptions import Http406Exception, Http400Exception
+from .oasschema import validate
 
 
 class OpenAPI:
@@ -54,16 +57,42 @@ class OpenAPI:
             except:
                 Logger.error('"Invalide OpenAPI Spec for endpoint "{}" {}'.format(rule, methods))
 
-    def check(self, function, method):
+    def check(self, funcName, method, *args, **kwargs):
+        schemas = self.spec.get("components", {})
+
         try:
-            # TODO parcourir la doc pour trouver parameters ou bodydata à valider
-            print(self._doc[funcName][method.lower()])
-            if "parameters" in self._doc[funcName][method.lower()]:
-                pass
-            return str(self._doc[funcName][method.lower()])
+            doc = self._doc[funcName][method.lower()]
         except:
-            # TODO raise error 500 : OpenAPI Specifications not found
-            return "ERROR"
+            Logger.error("OpenAPI Specifications not found for {} on route def ''{}()''".format(method, funcName))
+            return
+
+        body = doc.get("requestBody", None)
+        if body:
+            dataRequired = body.get("required", False)
+
+            keys = body["content"].keys()
+            if len(keys) > 1:
+                Logger.error("OpenAPI Specifications marlformed body content for {} on route def '{}()'".format(method, funcName))
+                return
+            contentType = list(keys)[0]
+            schema = (body["content"][contentType]).get("schema", None)
+
+            if not schema:
+                Logger.error("OpenAPI Specifications body content schema missing for {} on route def '{}()'".format(method, funcName))
+                return
+
+            # NOTE if contentType != Accept in request.headers, return Http406Exception
+            schema["components"] = schemas
+            if contentType == "application/json":
+                data = request.get_json()
+                if (not data and dataRequired) or not validate(data, schema):
+                    return Http400Exception
+
+        # print(doc)
+        # TODO validate query (/?name=toto) 400
+        # TODO validate args (/<args>/) 400 & *args, **kwargs
+        # if "parameters" in self._doc[funcName][method.lower()]:
+        #    pass
 
     def fake(self, funcName, method):
         try:

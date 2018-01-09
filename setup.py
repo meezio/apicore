@@ -62,6 +62,7 @@ setup(
         'python-jose',
         'redis',
         'pystache',
-        'pymongo'
+        'pymongo',
+        'jsonschema'
     ]
 )

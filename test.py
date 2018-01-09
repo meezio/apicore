@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from apicore import api, Logger, config, Http402Exception, Authorization, Lang
+from tests import oascheck
 
 Logger.info("Starting {} API Server...".format(config.app_name))
 
