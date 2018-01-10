@@ -7,7 +7,8 @@ def validate(data, schema):
     except jsonschema.exceptions.ValidationError:
         return False
 
-    if schema["type"] == "object":
+    # TODO if $ref or
+    if "type" in schema and schema["type"] == "object":
         allowed = list(schema["properties"].keys())
         for key in data.keys():
             if key not in allowed:
