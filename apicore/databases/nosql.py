@@ -59,6 +59,13 @@ class MongoDB:
         else:
             raise Http404Exception()
 
+    def isUsed(self, collection, field, identifier):
+        match = {field: identifier}
+        data = self.db[collection].find_one(match)
+
+        if data:
+            raise Http409Exception()
+
     def getleftJoin(self, collection, identifier, rightField, key="_id", projects=None):
         if projects is None:
             projects = []
