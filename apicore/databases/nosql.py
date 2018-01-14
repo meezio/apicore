@@ -119,6 +119,23 @@ class MongoDB:
 
         return list(self.db[collection].aggregate(pipeline))
 
+    def merge(self, collection, match, rightCollection, offset=0, limit=0, sort=None, projects=None):
+        if projects is None:
+            projects = []
+
+        pipeline = [{"$match": match}]
+        if offset:
+            pipeline.append({"$skip": offset})
+        if limit:
+            pipeline.append({"$limit": limit})
+        pipeline.append({"$lookup": {"from": rightCollection, "localField": "_id", "foreignField": "_id", "as": rightCollection}})
+        for project in projects:
+            pipeline.append({"$project": project})
+        if sort:
+            pipeline.append({"$sort": dict(sort)})
+
+        return list(self.db[collection].aggregate(pipeline))
+
     def post(self, data, collection):
         try:
             return self.db[collection].insert_one(data).inserted_id
