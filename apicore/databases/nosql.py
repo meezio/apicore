@@ -179,5 +179,20 @@ class MongoDB:
 
         self.db[collection].delete_one({key: identifier})
 
+    def getSum(self, collection, match, field):
+        pipeline = [{"$match": match}]
+
+        pipeline.append({"$group": {
+            "_id": None,
+            "total": {"$sum": "${}".format(field)}
+        }})
+
+        resu = list(self.db[collection].aggregate(pipeline))
+
+        if resu:
+            return resu[0]
+        else:
+            return {"total": 0}
+
 
 Db = MongoDB()
