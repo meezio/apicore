@@ -194,5 +194,23 @@ class MongoDB:
         else:
             return {"total": 0}
 
+    def getStats(self, collection, match, field):
+        pipeline = [{"$match": match}]
+
+        pipeline.append({"$group": {
+            "_id": None,
+            "max": {"$max": "${}".format(field)},
+            "min": {"$min": "${}".format(field)},
+            "avg": {"$avg": "${}".format(field)}
+        }})
+
+        resu = list(self.db[collection].aggregate(pipeline))
+
+        if resu:
+            del resu[0]["_id"]
+            return resu[0]
+        else:
+            return {"max": 0, "min": 0, "avg": 0}
+
 
 Db = MongoDB()
