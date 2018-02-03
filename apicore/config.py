@@ -67,23 +67,15 @@ class Config:
 
     def __setDefault(self):
         # Service name
-        self.data['app_name'] = "Meezio"
+        self.data['app_name'] = "My App"
         # URL prefix
         self.data['prefix'] = ""
         # Active debug
         self.data['debug'] = True
-        # Accept all JWT from issuers from this list
-        self.data['issWhitelist'] = None
-        # Reject all JWT from issuers from this list
-        self.data['issBlacklist'] = None
-        # Validate token against Expire date/time
-        self.data['tokenExpire'] = True
         # redis://:password@localhost:6379/10
         self.data['redis'] = None
         # Relatif URL path to embedded swagger UI
         self.data['swagger_ui'] = "/"
-        # SMTP server used to sent email
-        self.data['smtp_host'] = "localhost"
 
 
 config = Config()

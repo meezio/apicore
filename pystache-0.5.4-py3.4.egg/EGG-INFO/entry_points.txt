@@ -1,4 +1,0 @@
-[console_scripts]
-pystache-test = pystache.commands.test:main
-pystache = pystache.commands.render:main
-

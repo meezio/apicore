@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from apicore import api, Logger, config, Http402Exception, Authorization, Lang
+from apicore import api, Logger, config, Http402Exception, Lang
 from tests import oascheck
 
 Logger.info("Starting {} API Server...".format(config.app_name))
@@ -10,13 +10,6 @@ Logger.info("Starting {} API Server...".format(config.app_name))
 def error():
     print(Lang.best_match(['it', 'en', 'fr']))
     raise Http402Exception()
-
-
-@api.route('/jwt/')
-def jwt():
-    userProfile = Authorization()
-    print(userProfile)
-    return "JWT Valid!"
 
 
 if __name__ == "__main__":

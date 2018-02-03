@@ -46,7 +46,7 @@ class Cache:
 
     .. note::
 
-        If ``redis`` URI is configured the cache is store in redis server, otherwise it is cache in memory.
+        If ``redis`` URI is configured the cache is store in redis server, otherwise in-memory is used and all the cached data are lost after restarting the instance.
 
     """
     def __init__(self):

@@ -1,4 +1,0 @@
-Authorization
-^^^^^^^^^^^^^
-
-.. autofunction:: apicore.Authorization

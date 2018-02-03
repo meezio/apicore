@@ -1,7 +1,7 @@
 Welcome to apicore's documentation!
 ===================================
 
-Set of core libraries usefull for building REST API and Microservices based on Flask.
+Set of core libraries for building REST API and Microservices based on Flask.
 
 The code is open source, release under MIT and written in Python 3.
 
@@ -18,7 +18,6 @@ Features
 * Configuration file loader
 * A simple Logger
 * Raise exception conform to HTTP status codes
-* Authorization using JSON Web Token(JWT) issued from an OpenID Connect provider
 * OpenAPI 3.0 specification embedded with Swagger UI
 
 Example
@@ -28,7 +27,7 @@ Example
 
     #!/usr/bin/env python
 
-    from apicore import api, Logger, config, Http409Exception, Authorization
+    from apicore import api, Logger, config, Http409Exception
 
     Logger.info("Starting {} API Server...".format(config.app_name))
 
@@ -44,13 +43,6 @@ Example
         raise Http409Exception()
 
 
-    @api.route('/jwt/')
-    def jwt():
-        userProfile = Authorization()
-        print(userProfile);
-        return "JWT Valid!"
-
-
     if __name__ == "__main__":
         api.debug = config.debug
         api.run()
@@ -64,23 +56,15 @@ Configuration is set in ``conf/config.yaml`` file (see :py:class:`apicore.config
 +--------------+---------------+------------------------------------------------------------------------------------------------+
 | Name         | Default value | Description                                                                                    |
 +==============+===============+================================================================================================+
-| app_name     | "Meezio"      | Application's name.                                                                            |
+| app_name     | "My App"      | Application's name.                                                                            |
 +--------------+---------------+------------------------------------------------------------------------------------------------+
 | debug        | True          | Active debug mode.                                                                             |
-+--------------+---------------+------------------------------------------------------------------------------------------------+
-| issWhitelist | None          | Whitelist for OIDC issuers. If not set, every issuers are allowed except ones from blacklist.  |
-+--------------+---------------+------------------------------------------------------------------------------------------------+
-| issBlacklist | None          | Blacklist for OIDC issuers. synaxte : same as 'iss' claim in the JWT.                          |
 +--------------+---------------+------------------------------------------------------------------------------------------------+
 | prefix       | ""            | Add a prefix to URL path (ie: "/api").                                                         |
 +--------------+---------------+------------------------------------------------------------------------------------------------+
 | redis        | None          | Redis server used for caching data : redis://:password@localhost:6379/0. If not set use memory.|
 +--------------+---------------+------------------------------------------------------------------------------------------------+
-| smtp_host    | "localhost"   | SMTP server used to sent email.                                                                |
-+--------------+---------------+------------------------------------------------------------------------------------------------+
 | swagger_ui   | "/"           | Relative URL path to embedded Swagger UI (``prefix`` + ``swagger_ui``).                        |
-+--------------+---------------+------------------------------------------------------------------------------------------------+
-| tokenExpire  | True          | Check 'exp' claim in JWT to validate token.                                                    |
 +--------------+---------------+------------------------------------------------------------------------------------------------+
 
 OpenAPI 3.0
@@ -159,7 +143,6 @@ APIs
    :maxdepth: 2
 
    api/api
-   api/authorization
    api/cache
    api/config
    api/exceptions
@@ -170,4 +153,9 @@ APIs
 .. todo::
 
     * i18n HTTP response messages.
-    * Configure using command line argument and environnement variables which override configuration file.
+    * Add namespace for cache
+    * Configure using command line argument and environnement variables which override configuration file making it optional.
+    * Use API Specification and json schemas to validate JSON data
+    * Access Control Policies engine
+    * MongoDB helper
+    * Extensible notification system (using mail, Firebase, SMS, ...)

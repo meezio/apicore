@@ -33,7 +33,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='apicore',
-    version='1.1.5',
+    version='1.2.0',
     # packages=['apicore'],
     packages=find_packages(),
     author="Meezio SAS",
