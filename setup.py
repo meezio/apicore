@@ -15,7 +15,7 @@ Features
 --------
 
 * Cross-origin resource sharing (CORS) ready
-* Data caching with redis server or direct in memory
+* Data caching with redis server or in-memory
 * Configuration file loader
 * A simple Logger
 * Raise exception conform to HTTP status codes
@@ -59,10 +59,8 @@ setup(
         'termcolor',
         'Flask',
         'PyYAML',
-        'python-jose',
         'redis',
         'pystache',
-        'pymongo',
         'jsonschema'
     ]
 )
