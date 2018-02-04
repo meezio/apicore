@@ -7,7 +7,6 @@ The code is open source, release under MIT and written in Python 3.
 
 .. code:: bash
 
-    apt-get install build-essential python3-dev
     pip install apicore
 
 Features
@@ -44,6 +43,7 @@ Example
 
 
     if __name__ == "__main__":
+        # api is an instance of API which inherit from Flask
         api.debug = config.debug
         api.run()
 
@@ -53,19 +53,19 @@ Configuration
 
 Configuration is set in ``conf/config.yaml`` file (see :py:class:`apicore.config.Config`).
 
-+--------------+---------------+------------------------------------------------------------------------------------------------+
-| Name         | Default value | Description                                                                                    |
-+==============+===============+================================================================================================+
-| app_name     | "My App"      | Application's name.                                                                            |
-+--------------+---------------+------------------------------------------------------------------------------------------------+
-| debug        | True          | Active debug mode.                                                                             |
-+--------------+---------------+------------------------------------------------------------------------------------------------+
-| prefix       | ""            | Add a prefix to URL path (ie: "/api").                                                         |
-+--------------+---------------+------------------------------------------------------------------------------------------------+
-| redis        | None          | Redis server used for caching data : redis://:password@localhost:6379/0. If not set use memory.|
-+--------------+---------------+------------------------------------------------------------------------------------------------+
-| swagger_ui   | "/"           | Relative URL path to embedded Swagger UI (``prefix`` + ``swagger_ui``).                        |
-+--------------+---------------+------------------------------------------------------------------------------------------------+
++--------------+---------------+---------------------------------------------------------------------------------------------------+
+| Name         | Default value | Description                                                                                       |
++==============+===============+===================================================================================================+
+| app_name     | "My App"      | Application's name.                                                                               |
++--------------+---------------+---------------------------------------------------------------------------------------------------+
+| debug        | True          | Active debug mode.                                                                                |
++--------------+---------------+---------------------------------------------------------------------------------------------------+
+| prefix       | ""            | Add a prefix to all URL paths (ie: "/api").                                                       |
++--------------+---------------+---------------------------------------------------------------------------------------------------+
+| redis        | None          | Redis server used for caching data : redis://:password@localhost:6379/0. If not set use in-memory.|
++--------------+---------------+---------------------------------------------------------------------------------------------------+
+| swagger_ui   | "/"           | Relative URL path to embedded Swagger UI (``prefix`` + ``swagger_ui``).                           |
++--------------+---------------+---------------------------------------------------------------------------------------------------+
 
 OpenAPI 3.0
 -----------
@@ -154,8 +154,8 @@ APIs
 
     * i18n HTTP response messages.
     * Add namespace for cache
-    * Configure using command line argument and environnement variables which override configuration file making it optional.
+    * Configure using command line argument and environnement variables which override configuration file and making it optional.
     * Use API Specification and json schemas to validate JSON data
     * Access Control Policies engine
-    * MongoDB helper
+    * MongoDB helpers
     * Extensible notification system (using mail, Firebase, SMS, ...)
