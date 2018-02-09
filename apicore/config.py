@@ -59,6 +59,14 @@ class Config:
         except FileNotFoundError:
                 Logger.error("Configuration file not found")
 
+    def isDefined(self, name):
+        """ Check whether configuration directive is defined or not
+
+        :param str string: Name of configuration directive
+        :return boolean: True is directive is defined
+        """
+        return name in self.data
+
     def __getattr__(self, name):
         if name in self.data:
             return self.data[name]
@@ -76,6 +84,10 @@ class Config:
         self.data['redis'] = None
         # Relatif URL path to embedded swagger UI
         self.data['swagger_ui'] = "/"
+        # Login to access API Specification
+        self.data['specs_login'] = None
+        # Password to access API Specification
+        self.data['specs_pwd'] = None
 
 
 config = Config()

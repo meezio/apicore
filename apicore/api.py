@@ -113,12 +113,25 @@ class API(Flask):
     def jsonResponse(self, data, code=200):
         return toJSON(data), code, {'Content-Type': 'application/json; charset=utf-8'}
 
+    def authenticate(self):
+        """Sends a 401 response that enables basic auth"""
+        return Response(
+            'Could not verify your access level for that URL.\nYou have to login with proper credentials',
+            401,
+            {'WWW-Authenticate': 'Basic realm="Login Required"'}
+        )
+
 
 api = API(__name__)
 
 
 @api.route(api.oas.endpoint)
 def apispecs():
+    auth = request.authorization
+
+    if config.specs_login and config.specs_pwd and (not auth or not check_auth(auth.username, auth.password)):
+        return api.authenticate()
+
     return jsonify(api.oas.spec)
 
 
@@ -129,3 +142,7 @@ def swaggerUI():
     host = request.headers.get("X-Forwarded-Host", request.headers.get("Host", url.hostname))
     scheme = request.headers.get("X-Forwarded-Proto", url.scheme)
     return render_template('index.html', url="{}://{}{}{}".format(scheme, host, api.prefix, api.oas.endpoint))
+
+
+def check_auth(username, password):
+    return username == config.specs_login and password == config.specs_pwd
