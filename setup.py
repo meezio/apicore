@@ -33,7 +33,7 @@ from setuptools import setup
 
 setup(
     name='apicore',
-    version='1.0.2',
+    version='1.0.3',
     packages=['apicore'],
     author="Meezio SAS",
     author_email="dev@meez.io",
