@@ -51,7 +51,7 @@ class Config:
         """
         try:
             with open(confFile) as f:
-                data = yaml.load(f)
+                data = yaml.safe_load(f)
                 if data:
                     self.data.update(data)
         except FileNotFoundError:
