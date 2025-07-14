@@ -56,10 +56,13 @@ class API(Flask):
     # if 0 return HTTP code 500 and generic HTTP message
     def __make_json_error(self, ex):
         if isinstance(ex, HTTPException):
-            if hasattr(ex, 'verbose') and ex.verbose:
-                response = jsonify(message=ex.description)
+            if config.debug:
+                if hasattr(ex, 'verbose') and ex.verbose:
+                    response = jsonify(message=ex.description)
+                else:
+                    response = jsonify(message=str(ex))
             else:
-                response = jsonify(message=str(ex))
+                response = jsonify(message="Une erreur est survenue")
 
             response.status_code = ex.code
         else:
