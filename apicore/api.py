@@ -55,6 +55,7 @@ class API(Flask):
     # Return error information if debug_level = 1,
     # if 0 return HTTP code 500 and generic HTTP message
     def __make_json_error(self, ex):
+        print(str(ex))
         if isinstance(ex, HTTPException):
             if config.debug:
                 if hasattr(ex, 'verbose') and ex.verbose:
