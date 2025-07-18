@@ -3,7 +3,7 @@ packages = ["apicore"]
 
 [project]
 name = "apicore"
-version = "1.0.4"
+version = "1.0.5"
 description = "Core lib for REST API"
 authors = [
   { name = "Meezio SAS", email = "dev@meez.io" }
