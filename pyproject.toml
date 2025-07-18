@@ -1,0 +1,36 @@
+[tool.setuptools]
+packages = ["apicore"]
+
+[project]
+name = "apicore"
+version = "1.0.4"
+description = "Core lib for REST API"
+authors = [
+  { name = "Meezio SAS", email = "dev@meez.io" }
+]
+license = "MIT"
+keywords = ["flask", "rest", "api", "jwt", "redis", "cors"]
+classifiers = [
+  "Intended Audience :: Developers",
+  "Development Status :: 5 - Production/Stable",
+  "Environment :: No Input/Output (Daemon)",
+  "Framework :: Flask",
+  "Natural Language :: French",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Topic :: Internet :: WWW/HTTP :: WSGI :: Server",
+  "Topic :: Software Development :: Libraries"
+]
+dependencies = [
+  "termcolor",
+  "Flask",
+  "PyYAML",
+  "python-jose",
+  "redis"
+]
+urls = { "Homepage" = "https://github.com/meezio/apicore", "Documentation" = "http://apicore.readthedocs.io/en/latest/", "Company" = "https://meez.io"}
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
